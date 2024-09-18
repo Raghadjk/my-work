@@ -1,0 +1,108 @@
+class Account:
+    def __init__(self, account_id, account_holder, balance=0):
+        self.account_id = account_id
+        self.account_holder = account_holder
+        self.balance = balance
+
+    def deposit(self, amount):
+        if amount > 0:
+            self.balance += amount
+            print(f"Successfully deposited ${amount}. New balance: ${self.balance}.")
+        else:
+            print("Deposit amount must be positive.")
+
+    def withdraw(self, amount):
+        if amount > self.balance:
+            print("Insufficient funds.")
+        elif amount <= 0:
+            print("Withdrawal amount must be positive.")
+        else:
+            self.balance -= amount
+            print(f"Successfully withdrew ${amount}. New balance: ${self.balance}.")
+
+    def display_info(self):
+        return f"Account ID: {self.account_id}, Account Holder: {self.account_holder}, Balance: ${self.balance}"
+
+
+class Bank:
+    def __init__(self):
+        self.accounts = {}
+
+    def create_account(self, account_holder):
+        account_id = len(self.accounts) + 1
+        new_account = Account(account_id, account_holder)
+        self.accounts[account_id] = new_account
+        print(f"Account created successfully for {account_holder}. Account ID: {account_id}.")
+
+    def get_account(self, account_id):
+        return self.accounts.get(account_id, None)
+
+    def deposit(self, account_id, amount):
+        account = self.get_account(account_id)
+        if account:
+            account.deposit(amount)
+        else:
+            print("Account not found.")
+
+    def withdraw(self, account_id, amount):
+        account = self.get_account(account_id)
+        if account:
+            account.withdraw(amount)
+        else:
+            print("Account not found.")
+
+    def display_account_info(self, account_id):
+        account = self.get_account(account_id)
+        if account:
+            print(account.display_info())
+        else:
+            print("Account not found.")
+
+    def list_accounts(self):
+        if not self.accounts:
+            print("No accounts available.")
+        else:
+            print("List of bank accounts:")
+            for account in self.accounts.values():
+                print(account.display_info())
+
+
+def main():
+    bank = Bank()
+
+    while True:
+        print("\nWelcome to the Bank Management System!")
+        print("1. Create Account")
+        print("2. Deposit Money")
+        print("3. Withdraw Money")
+        print("4. Display Account Info")
+        print("5. List All Accounts")
+        print("6. Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            account_holder = input("Enter account holder name: ")
+            bank.create_account(account_holder)
+        elif choice == '2':
+            account_id = int(input("Enter account ID to deposit money: "))
+            amount = float(input("Enter amount to deposit: "))
+            bank.deposit(account_id, amount)
+        elif choice == '3':
+            account_id = int(input("Enter account ID to withdraw money: "))
+            amount = float(input("Enter amount to withdraw: "))
+            bank.withdraw(account_id, amount)
+        elif choice == '4':
+            account_id = int(input("Enter account ID to display info: "))
+            bank.display_account_info(account_id)
+        elif choice == '5':
+            bank.list_accounts()
+        elif choice == '6':
+            print("Thank you for using the Bank Management System! Goodbye.")
+            break
+        else:
+            print("Invalid choice, please try again.")
+
+
+if __name__ == "__main__":
+    main()
